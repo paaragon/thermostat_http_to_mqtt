@@ -1,0 +1,65 @@
+#!/usr/bin/env sh
+
+# Semantic versioning details: https://semver.org/
+# Constants
+RELEASE_PATCH="patch"
+RELEASE_MINOR="minor"
+RELEASE_MAJOR="major"
+GET_GIT_VERSION="get-git-version"
+CHECK_CLEAN="check-clean"
+
+DESCRIBE=$(git describe --always --tags)
+
+VERSION=$(echo ${DESCRIBE} | grep -Eo ""[0-9]+\.[0-9]+\.[0-9]+"")
+
+MAJOR=$(echo ${VERSION} | grep -Eo ""^[0-9]+"")
+MINOR=$(echo ${VERSION} | grep -Eo "[0-9]+\.[0-9]+$" | grep -Eo "^[0-9]+")
+PATCH=$(echo ${VERSION} | grep -Eo "[0-9]+$")
+
+# Command line arguments.
+if [ ${#} -lt 1 ];
+then
+  echo "Usage: ${0} [ ${RELEASE_PATCH} | ${RELEASE_MINOR} | ${RELEASE_MAJOR} ]"
+  exit 1
+fi
+
+version_patch=$PATCH
+version_minor=$MINOR
+version_major=$MAJOR
+
+if [ ${1} = ${GET_GIT_VERSION} ];
+then
+  echo "${version_major}.${version_minor}.${version_patch}"
+  exit 0
+elif [ ${1} = ${CHECK_CLEAN} ];
+then
+  if [ -z "$(git status --porcelain)" ]; then 
+    echo "Git repository is clean"
+    exit 0
+  else 
+    echo "Git repository not clean. Commit your changes"
+    exit 1
+  fi
+elif [ ${1} = ${RELEASE_PATCH} ];
+then
+  let "version_patch=version_patch+1"
+elif [ ${1} = ${RELEASE_MINOR} ];
+then
+  version_patch=0
+  let "version_minor=version_minor+1"
+elif [ ${1} = ${RELEASE_MAJOR} ];
+then
+  version_patch=0
+  version_minor=0
+  let "version_major=version_major+1"
+fi
+
+git pull
+
+printf "New version: "
+echo "${version_major}.${version_minor}.${version_patch}"
+
+# Push the version tags to git
+git tag -a "${version_major}.${version_minor}.${version_patch}" -m "${version_major}.${version_minor}.${version_patch}"
+git push
+git push --tags
