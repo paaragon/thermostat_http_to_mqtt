@@ -1,4 +1,4 @@
-CONTAINER_NAME=thermostat_mqtt_to_sql
+CONTAINER_NAME=thermostat_http_to_mqtt
 DOCKER_REGISTRY_URL=paaragon
 VERSION:=$(shell ./semver get-git-version)
 
@@ -11,9 +11,6 @@ endef
 
 help:                      ## Show this help.
 	@grep -h "##" $(MAKEFILE_LIST) | grep -v grep | tr -d '##' | tr -d '$$'
-
-active-env:
-	source thermostatapi/bin/activate
 
 init-semver:               ## Tag de current commit with a valid semantic version (0.0.0).
 	git tag 0.0.0 -m "first semver tag"
