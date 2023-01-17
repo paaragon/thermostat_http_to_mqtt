@@ -55,7 +55,7 @@ docker-publish:            ## Publish the docker image to registry.
 	docker push $(DOCKER_REGISTRY_URL)/$(CONTAINER_NAME):$(VERSION)
 
 docker-run:
-	docker run -it --rm --name=$(CONTAINER_NAME) --env-file .env $(CONTAINER_NAME):$(VERSION)
+	docker run -it --rm --name=$(CONTAINER_NAME) --env-file .env -p 3001:3001 $(CONTAINER_NAME):$(VERSION)
 
 run:						## Runs the python
 	$(call setup_env)
