@@ -11,6 +11,8 @@ CORS(app)
 
 
 def check_auth(username, password):
+    print((username, os.environ["AUTH_USER"], password,  os.environ["AUTH_PASS"]))
+    print((username == os.environ["AUTH_USER"], password == os.environ["AUTH_PASS"]))
     return username == os.environ["AUTH_USER"] and password == os.environ["AUTH_PASS"]
 
 
