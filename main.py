@@ -1,6 +1,7 @@
 import os
 from functools import wraps
-from flask import Flask, request, CORS
+from flask import Flask, request
+from flask_cors import CORS
 from waitress import serve
 import db
 import mqtt
