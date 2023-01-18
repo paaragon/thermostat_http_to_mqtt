@@ -1,9 +1,10 @@
-from flask import Flask, request
+from flask import Flask, request, CORS
 from waitress import serve
 import db
 import mqtt
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/api/v1/thermostat/temp", methods=("GET",))
