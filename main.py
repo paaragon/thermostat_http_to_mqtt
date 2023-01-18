@@ -1,3 +1,5 @@
+import os
+from functools import wraps
 from flask import Flask, request, CORS
 from waitress import serve
 import db
@@ -7,7 +9,23 @@ app = Flask(__name__)
 CORS(app)
 
 
+def check_auth(username, password):
+    return username == os.environ["AUTH_USER"] and password == os.environ["AUTH_PASS"]
+
+
+def login_required(f):
+    """ basic auth for api """
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return {"message": "Authentication required"}
+        return f(*args, **kwargs)
+    return decorated_function
+
+
 @app.route("/api/v1/thermostat/temp", methods=("GET",))
+@login_required
 def getLatestSettedTemperature():
     print("getting temp")
     last_setted = db.get_last_setted()
@@ -29,6 +47,7 @@ def getLatestSettedTemperature():
 
 
 @app.route("/api/v1/thermostat/temp", methods=("POST",))
+@login_required
 def updateSettedTemperature():
     print("Setting temp")
     body = request.get_json()
