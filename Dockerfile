@@ -7,7 +7,7 @@ WORKDIR /app
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 
-COPY . .
+COPY src/* .
 
 EXPOSE 3001
 
