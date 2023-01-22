@@ -75,9 +75,9 @@ def updateSettedTemperature():
         petitioner = body["petitioner"] if "petitioner" in body else "grafana"
         temp = body["temp"]
         mode = body["mode"]
-        mqtt.publish("thermostat/set/" + petitioner + "}", str(temp))
-        mqtt.publish("thermostat/setmode/" + petitioner + "}", str(mode))
-
+        mqtt.publish("thermostat/set/" + petitioner, str(temp))
+        mqtt.publish("thermostat/setmode/" + petitioner, str(mode))
+        log.info("POST /api/v1/thermostat/temp 200")
         return {
             "error": False,
             "msg": "ok"
