@@ -1,5 +1,5 @@
 import os
-from logger import logging as log
+from logger import logger as log
 from functools import wraps
 from flask import Flask, request
 from flask_cors import CORS
@@ -12,8 +12,6 @@ CORS(app)
 
 
 def check_auth(username, password):
-    print((username, os.environ["AUTH_USER"], password,  os.environ["AUTH_PASS"]))
-    print((username == os.environ["AUTH_USER"], password == os.environ["AUTH_PASS"]))
     return username == os.environ["AUTH_USER"] and password == os.environ["AUTH_PASS"]
 
 
@@ -73,10 +71,16 @@ def updateSettedTemperature():
             }
 
         petitioner = body["petitioner"] if "petitioner" in body else "grafana"
-        temp = body["temp"]
-        mode = body["mode"]
-        mqtt.publish("thermostat/set/" + petitioner, str(temp))
-        mqtt.publish("thermostat/setmode/" + petitioner, str(mode))
+        temp = body["temp"] if "temp" in body else None
+        mode = body["mode"] if "mode" in body else None
+
+        if temp is not None:
+            log.info("Publising temp")
+            mqtt.publish("thermostat/set/" + petitioner, str(temp))
+        if mode is not None:
+            log.info("Publising mode")
+            mqtt.publish("thermostat/setmode/" + petitioner, str(mode))
+
         log.info("POST /api/v1/thermostat/temp 200")
         return {
             "error": False,

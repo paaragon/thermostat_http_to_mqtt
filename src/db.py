@@ -1,4 +1,4 @@
-from logger import logging as log
+from logger import logger as log
 import os
 from contextlib import contextmanager
 from psycopg2 import pool
