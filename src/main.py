@@ -33,6 +33,7 @@ def getLatestSettedTemperature():
         log.info("GET /api/v1/thermostat/temp")
         last_setted = db.get_last_setted()
         last_mode = db.get_last_mode()
+        last_temp = db.get_last_temp()
 
         if last_setted is None or last_mode is None:
             log.error("no last_setted or last_mode")
@@ -46,7 +47,8 @@ def getLatestSettedTemperature():
             "error": False,
             "result": {
                 "temp": last_setted,
-                "mode": last_mode
+                "mode": last_mode,
+                "last": last_temp
             }
         }
     except Exception as e:
