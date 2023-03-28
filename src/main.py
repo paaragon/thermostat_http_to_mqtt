@@ -48,7 +48,8 @@ def getLatestSettedTemperature():
             "result": {
                 "temp": last_setted,
                 "mode": last_mode,
-                "last": last_temp
+                "last": last_temp,
+                "status": "on" if last_setted < last_temp else "off"
             }
         }
     except Exception as e:
