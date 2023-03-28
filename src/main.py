@@ -98,6 +98,38 @@ def updateSettedTemperature():
         }
 
 
+@app.route("/api/v1/thermostat/temp/<dir>", methods=("POST",))
+@login_required
+def increaseDecreaseSettedTemperature(dir):
+    try:
+        log.info("POST /api/v1/thermostat/temp/<dir>")
+        body = request.get_json()
+        petitioner = body["petitioner"] if body is not None and "petitioner" in body else "grafana"
+
+        last_setted = db.get_last_setted()
+
+        direction = 1 if dir == 'inc' else -1
+        temp = last_setted + direction
+
+        if temp is not None:
+            log.info("Publising temp")
+            mqtt.publish("thermostat/set/" + petitioner, str(temp))
+
+        log.info("POST /api/v1/thermostat/temp/<dir> 200")
+        return {
+            "error": False,
+            "msg": "ok"
+        }
+    except Exception as e:
+        log.error("POST /api/v1/thermostat/temp/<dir>")
+        log.error(str(e))
+
+        return {
+            "error": True,
+            "msg": str(e)
+        }
+
+
 if __name__ == "__main__":
     log.info("Starting server")
     mqtt.init()
