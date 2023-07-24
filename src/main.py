@@ -160,18 +160,29 @@ def homebridge_status():
             "msg": str(e)
         }
 
+
 @app.route("/api/v1/homebridge/targetTemperature", methods=("GET",))
 @login_required
 def homebridge_targetTemperature():
     try:
         log.info("POST /api/v1/homebridge/targetTemperature")
 
+        log.info(str(request.args.to_dict(flat=False)))
+
         petitioner = "homebridge"
         temp = request.args.get("value")
 
-        if temp is not None:
-            log.info("Publising temp")
-            mqtt.publish("thermostat/set/" + petitioner, str(temp))
+        if temp is None:
+            log.error("GET /api/v1/homebridge/targetTemperature")
+            log.error("No temp found")
+
+            return {
+                "error": True,
+                "msg": "No temp found"
+            }
+        temp = int(float(temp))
+        log.info("Publising temp")
+        mqtt.publish("thermostat/set/" + petitioner, str(temp))
 
         last_setted = temp
         last_temp = db.get_last_temp()
