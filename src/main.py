@@ -169,7 +169,7 @@ if __name__ == "__main__":
 
 @app.route("/api/v1/homebridge/targetTemperature", methods=("GET",))
 @login_required
-def homebridge_status():
+def homebridge_targetTemperature():
     try:
         log.info("POST /api/v1/homebridge/targetTemperature")
 
