@@ -167,8 +167,6 @@ def homebridge_targetTemperature():
     try:
         log.info("POST /api/v1/homebridge/targetTemperature")
 
-        log.info(str(request.args.to_dict(flat=False)))
-
         petitioner = "homebridge"
         temp = request.args.get("value")
 
