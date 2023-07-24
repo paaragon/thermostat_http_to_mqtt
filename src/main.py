@@ -160,13 +160,6 @@ def homebridge_status():
             "msg": str(e)
         }
 
-
-if __name__ == "__main__":
-    log.info("Starting server")
-    mqtt.init()
-    serve(app, host="0.0.0.0", port=3001)
-
-
 @app.route("/api/v1/homebridge/targetTemperature", methods=("GET",))
 @login_required
 def homebridge_targetTemperature():
