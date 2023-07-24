@@ -188,9 +188,9 @@ def homebridge_status():
         return {
             "error": False,
             "msg": "ok",
-            "targetHeatingCoolingState": 1 if last_setted > last_temp else 0,
+            "targetHeatingCoolingState": 1,
             "targetTemperature": int(last_setted),
-            "currentHeatingCoolingState": 1 if last_setted > last_temp else 0,
+            "currentHeatingCoolingState": 1,
             "currentTemperature": int(last_temp),
             "currentRelativeHumidity": int(last_hum)
         }
