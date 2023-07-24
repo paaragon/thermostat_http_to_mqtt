@@ -131,6 +131,79 @@ def increaseDecreaseSettedTemperature(dir):
         }
 
 
+@app.route("/api/v1/homebridge/status", methods=("GET",))
+@login_required
+def homebridge_status():
+    try:
+        log.info("POST /api/v1/homebridge/status")
+
+        last_setted = db.get_last_setted()
+        last_temp = db.get_last_temp()
+        last_hum = db.get_last_hum()
+
+        log.info("GET /api/v1/homebridge/status 200")
+        return {
+            "error": False,
+            "msg": "ok",
+            "targetHeatingCoolingState": 1 if last_setted > last_temp else 0,
+            "targetTemperature": int(last_setted),
+            "currentHeatingCoolingState": 1 if last_setted > last_temp else 0,
+            "currentTemperature": int(last_temp),
+            "currentRelativeHumidity": int(last_hum)
+        }
+    except Exception as e:
+        log.error("GET /api/v1/homebridge/status")
+        log.error(str(e))
+
+        return {
+            "error": True,
+            "msg": str(e)
+        }
+
+
+if __name__ == "__main__":
+    log.info("Starting server")
+    mqtt.init()
+    serve(app, host="0.0.0.0", port=3001)
+
+
+@app.route("/api/v1/homebridge/targetTemperature", methods=("GET",))
+@login_required
+def homebridge_status():
+    try:
+        log.info("POST /api/v1/homebridge/targetTemperature")
+
+        petitioner = "homebridge"
+        temp = request.args.get("value")
+
+        if temp is not None:
+            log.info("Publising temp")
+            mqtt.publish("thermostat/set/" + petitioner, str(temp))
+
+        last_setted = temp
+        last_temp = db.get_last_temp()
+        last_hum = db.get_last_hum()
+
+        log.info("GET /api/v1/homebridge/targetTemperature 200")
+        return {
+            "error": False,
+            "msg": "ok",
+            "targetHeatingCoolingState": 1 if last_setted > last_temp else 0,
+            "targetTemperature": int(last_setted),
+            "currentHeatingCoolingState": 1 if last_setted > last_temp else 0,
+            "currentTemperature": int(last_temp),
+            "currentRelativeHumidity": int(last_hum)
+        }
+    except Exception as e:
+        log.error("GET /api/v1/homebridge/targetTemperature")
+        log.error(str(e))
+
+        return {
+            "error": True,
+            "msg": str(e)
+        }
+
+
 if __name__ == "__main__":
     log.info("Starting server")
     mqtt.init()

@@ -43,6 +43,18 @@ def get_last_temp():
         except Exception as e:
             log.error("getting get_last_setted")
             log.error(str(e))
+            log.error(str(e))
+
+def get_last_hum():
+    log.info("getting get_last_temp")
+    with db() as (conn, cursor):
+        try:
+            cursor.execute("SELECT humidity FROM read order by date desc LIMIT 1")
+            result = cursor.fetchall()
+            return result[0][0]
+        except Exception as e:
+            log.error("getting get_last_setted")
+            log.error(str(e))
 
 
 def get_last_mode():
