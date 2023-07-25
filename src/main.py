@@ -145,9 +145,9 @@ def homebridge_status():
         return {
             "error": False,
             "msg": "ok",
-            "targetHeatingCoolingState": 3,
+            "targetHeatingCoolingState": 1,
             "targetTemperature": int(last_setted),
-            "currentHeatingCoolingState": 3,
+            "currentHeatingCoolingState": 1,
             "currentTemperature": int(last_temp),
             "currentRelativeHumidity": int(last_hum)
         }
@@ -190,9 +190,9 @@ def homebridge_targetTemperature():
         return {
             "error": False,
             "msg": "ok",
-            "targetHeatingCoolingState": 3,
+            "targetHeatingCoolingState": 1,
             "targetTemperature": int(last_setted),
-            "currentHeatingCoolingState": 3,
+            "currentHeatingCoolingState": 1,
             "currentTemperature": int(last_temp),
             "currentRelativeHumidity": int(last_hum)
         }
